@@ -3,4 +3,5 @@
 *.swp
 /.npm/
 /.pnpm/
+/dist/
 .env

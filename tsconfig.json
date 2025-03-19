@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES6",            // Compilar para ES6
-    "module": "ESNext",         // Usar módulos ESNext
-    "strict": true,             // Ativar verificações estritas
-    "esModuleInterop": true,    // Compatibilidade com módulos ECMAScript
-    "skipLibCheck": true,       // Ignorar checagens de tipos de bibliotecas
-    "forceConsistentCasingInFileNames": true 
+    "module": "CommonJS",              // Configuração para usar ESM
+    "moduleResolution": "node",      // Resolução de módulos compatível com Node.js
+    "target": "ES6",                 // Compilar para ES6
+    "esModuleInterop": true,         // Compatibilidade com importações ESM
+    "strict": true,                  // Ativar verificações estritas
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"] 
+  "exclude": ["node_modules"]
 }
