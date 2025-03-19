@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES6",            // Compilar para ES6
+    "module": "ESNext",         // Usar módulos ESNext
+    "strict": true,             // Ativar verificações estritas
+    "esModuleInterop": true,    // Compatibilidade com módulos ECMAScript
+    "skipLibCheck": true,       // Ignorar checagens de tipos de bibliotecas
+    "forceConsistentCasingInFileNames": true 
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"] 
+}
