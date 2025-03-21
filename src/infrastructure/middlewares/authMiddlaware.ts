@@ -21,7 +21,7 @@ export async function authMiddleware(req: FastifyRequest, res: FastifyReply) {
       return res.status(401).send({ error: 'Token inválido' })
     }
 
-    const token = authHeader.replace('Bearer', '')
+    const token = authHeader.replace('Bearer', '').trim()
     const decoded = jwt.verify(token, env.JWT_SECRET) as UserData
 
     req.user = decoded

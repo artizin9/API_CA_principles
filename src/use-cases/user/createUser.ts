@@ -3,6 +3,8 @@ import { IUserRepository } from "../../domain/repository/IUserRepository"
 import { ServerError } from "../../shared/serverError"
 import { userSchema } from "../../infrastructure/schemas/userSchema"
 import { randomUUID } from "crypto"
+import jwt from 'jsonwebtoken'
+import { env } from '../../config/env'
 import bcrypt from "bcrypt"
 
 export class CreateUserUseCase {
@@ -15,11 +17,14 @@ export class CreateUserUseCase {
         const { name, email, password } = parsedData.data!
         const id = randomUUID()
         const hashedPassword: string = await bcrypt.hash(password, 10)
+        const token = jwt.sign({id: id}, env.JWT_SECRET, {expiresIn: '1h'})
 
         const isEmailExist = await this.userReposity.findUnique(email)
         if (isEmailExist) throw new ServerError("Email em uso", 409)
         
         const user = new User(name, email, hashedPassword, id)
         await this.userReposity.create(user)
+
+        return { ...user, token }
     }
 }

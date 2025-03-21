@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify"
-import { Register as register } from "./userRoutes"
+import { createUser as register, updateUser, deleteUser, readUser } from "./userRoutes"
 
-export const registerRoutes = (fastify: FastifyInstance) => {
-    fastify.register(register)
-}
+const routes = [ register, updateUser, deleteUser, readUser]
+export const registerRoutes = (fastify: FastifyInstance) => routes.forEach(
+    (route) => fastify.register(route)
+)
