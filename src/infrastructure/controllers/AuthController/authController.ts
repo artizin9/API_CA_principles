@@ -7,6 +7,6 @@ export class AuthUser {
     async authUser(req: FastifyRequest, res: FastifyReply){
         const { email, password } = req.body as {email: string, password: string}
         const auth = await this.auth.execute({email, password})
-        res.status(200).send({Message: "Usuário autenticado", auth})
+        res.status(200).send({Message: "Usuário autenticado", user: {...auth}})
     }
 }
