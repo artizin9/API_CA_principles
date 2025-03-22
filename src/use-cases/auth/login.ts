@@ -11,7 +11,7 @@ export class Login {
         const user = await this.userRepository.findUnique(email)
         const isPassword = await bcrypt.compare(password, user?.password ?? '')
 
-        if (!user || !isPassword) throw new ServerError("Credencias inválidas", 400)
+        if (!user || !isPassword) throw new ServerError("Credencias inválidas", 401)
 
         return {...user}
     }
