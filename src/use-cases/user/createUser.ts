@@ -22,7 +22,7 @@ export class CreateUserUseCase {
         const isEmailExist = await this.userReposity.findUnique(email)
         if (isEmailExist) throw new ServerError("Email em uso", 409)
         
-        const user = new User(name, email, hashedPassword, id)
+        const user = new User(name, email, hashedPassword, [], id)
         await this.userReposity.create(user)
 
         return { ...user, token }

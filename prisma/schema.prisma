@@ -8,8 +8,30 @@ datasource db {
 }
 
 model User {
-  id    String @id @unique
-  name  String
-  email String @unique
+  id        String     @id @unique
+  name      String
+  email     String     @unique
   password  String
+  trainings Training[]
+}
+
+model Training {
+  id               String     @id @unique
+  nameTraining     String
+  levelTraining    String
+  timeTraining     String
+  destinedTraining String
+  exercises        Exercise[]
+  users            User[]
+}
+
+model Exercise {
+  id           String   @id @unique
+  nameExercise String
+  numberRep    Int
+  numberExec   Int
+  execByRep    String
+  interval     String
+  training     Training @relation(fields: [trainingId], references: [id])
+  trainingId   String
 }
