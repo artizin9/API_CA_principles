@@ -10,7 +10,7 @@ const createUserUseCase = new CreateUserUseCase(userReposity)
 const updateUserUseCase = new UpdateUserUseCase(userReposity)
 const deleteUserUseCase = new DeleteUseruseCase(userReposity)
 const readUseruseCase = new ReadUseruseCase(userReposity)
-export const userController = new UserController(
+export const userInstance = new UserController(
     createUserUseCase,
     updateUserUseCase, 
     deleteUserUseCase, 

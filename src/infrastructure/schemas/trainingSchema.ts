@@ -7,4 +7,3 @@ export const trainingSchema = z.object({
     destinedTraining: z.string(),
 })
 
-type Training = z.infer<typeof trainingSchema>

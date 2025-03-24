@@ -5,6 +5,6 @@ export interface ITrainingRepository {
     findById(id: string): Promise<Training | null>
     findMany(): Promise <Training[] | null>
     create(training: Training): Promise <void>
-    update(training: Training): Promise <void>
+    update(training: Training): Promise<Training>
     delete(training: Training): Promise <void>
 }

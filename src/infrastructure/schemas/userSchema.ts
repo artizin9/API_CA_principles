@@ -6,5 +6,3 @@ export const userSchema = z.object({
     password: z.string().min(8)
 })
 
-// Tipando o user com sabe do schema dele
-type User = z.infer<typeof userSchema>

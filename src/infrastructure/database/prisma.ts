@@ -3,6 +3,8 @@ import { User } from '../../domain/entities/user'
 import { IUserRepository } from '../../domain/repository/IUserRepository'
 import { ITrainingRepository } from '../../domain/repository/ITrainingRepository'
 import { Training } from '../../domain/entities/training'
+import { Exercise } from '../../domain/entities/exercise'
+import { IExerciseRepository } from '../../domain/repository/IExerciseRepository'
 
 export class PrismaUserRepository implements IUserRepository{
     async findUnique(email: string): Promise<User | null> {
@@ -68,15 +70,30 @@ export class PrismaTrainingRepository implements ITrainingRepository{
     }
 
     async findById(id: string): Promise<Training | null> {
-        const training = await prisma.training.findFirst({
+        const training = await prisma.training.findUnique({
             where: { id }
         })
         return training
     }
 
     async findMany(): Promise<Training[] | null> {
-        const trainings = await prisma.training.findMany()
-        return trainings.length > 0 ? trainings.map((trainings: { nameTraining: string, levelTraining: string, timeTraining: string, destinedTraining: string, id: string }) => new Training(trainings.nameTraining, trainings.levelTraining, trainings.timeTraining, trainings.destinedTraining, [], [], trainings.id)) : null
+        const training = await prisma.training.findMany({
+            include: {
+                exercises: true,
+                users: true
+            }
+        })
+        return training.length > 0
+        ? training.map((train) => new Training(
+            train.nameTraining,
+            train.levelTraining,
+            train.timeTraining,
+            train.destinedTraining,
+            train.exercises,
+            train.users, 
+            train.id
+        ))
+        : null;
     }
 
     async create(training: Training): Promise<void> {
@@ -88,30 +105,92 @@ export class PrismaTrainingRepository implements ITrainingRepository{
                 timeTraining: training.timeTraining,
                 destinedTraining: training.destinedTraining,
                 users: {
-                    connect: training.user?.map(trainings => ({id: trainings.id})) || []
+                    connect: training.user?.map(exercises => ({id: exercises.id})) || []
                 },
                 exercises: {
-                    connect: training.exercises?.map(trainings => ({id: trainings.id})) || []
+                    connect: training.exercises?.map(exercises => ({id: exercises.id})) || []
                 }
             }
         })
     }
     
-    async update(training: Training): Promise<void> {
+    async update(training: Training): Promise<Training> {
         await prisma.training.update({
             where: { id: training.id },
             data: {
                 nameTraining: training.nameTraining,
                 levelTraining: training.levelTraining,
                 timeTraining: training.timeTraining,
-                destinedTraining: training.destinedTraining
+                destinedTraining: training.destinedTraining,
+                exercises: {
+                    connect: training.exercises?.map(exercise => ({ id: exercise.id }))
+                }
+            },
+            include: { exercises: true }
+        })
+
+        return training
+    }
+    
+    async delete(training: Training): Promise<void> {
+        await prisma.training.delete({
+            where: { id: training.id }
+        })
+    }
+}
+
+export class PrismaExerciseRepository implements IExerciseRepository{
+    async findUnique(id: string): Promise<Exercise | null> {
+        const exercise = await prisma.exercise.findUnique({
+            where: { id }
+        })
+        return exercise
+    }
+
+    async findById(id: string): Promise<Exercise | null> {
+        const exercise = await prisma.exercise.findFirst({
+            where: { id }
+        })
+        return exercise
+    }
+
+    async findMany(): Promise<Exercise[] | null> {
+        const exercise = await prisma.exercise.findMany()
+        return exercise.length > 0 ? exercise.map((exercises: { nameExercise: string, numberRep: number, numberExec: number, execByRep: string, interval: string, id: string }) => new Exercise(exercises.nameExercise, exercises.numberRep, exercises.numberExec, exercises.execByRep, exercises.interval, exercises.id)) : null
+    }
+
+    async create(exercise: Exercise): Promise<void> {
+        await prisma.exercise.create({
+            data: {
+                id: exercise.id ?? '',
+                nameExercise: exercise.nameExercise,
+                numberRep: exercise.numberRep,
+                numberExec: exercise.numberExec,
+                execByRep: exercise.execByRep,
+                interval: exercise.interval,
+                training: {
+                    connect: { id: exercise.trainingId } 
+                }
+            }
+        })
+    }
+    
+    async update(exercise: Exercise): Promise<void>{
+        await prisma.exercise.update({
+            where: { id: exercise.id },
+            data: {
+                nameExercise: exercise.nameExercise,
+                numberRep: exercise.numberRep,
+                numberExec: exercise.numberExec,
+                execByRep: exercise.execByRep,
+                interval: exercise.interval,
             }
         })
     }
 
-    async delete(training: Training): Promise<void> {
-        await prisma.training.delete({
-            where: { id: training.id }
+    async delete(exercise: Exercise): Promise<void>{
+        await prisma.exercise.delete({
+            where: { id: exercise.id }
         })
     }
 }

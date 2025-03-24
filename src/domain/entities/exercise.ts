@@ -5,6 +5,7 @@ export class Exercise {
         public numberExec: number,
         public execByRep: string,
         public interval: string,
+        public readonly trainingId?: string,
         public readonly id?: string,
     ){}
 }
