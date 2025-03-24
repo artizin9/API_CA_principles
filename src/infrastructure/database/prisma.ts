@@ -109,10 +109,9 @@ export class PrismaTrainingRepository implements ITrainingRepository{
         })
     }
 
-    async delete(training: Training): Promise<void> {  
-     {
-        await prisma.user.delete({
-            where: {id: training.id}
+    async delete(training: Training): Promise<void> {
+        await prisma.training.delete({
+            where: { id: training.id }
         })
-    }}
+    }
 }
