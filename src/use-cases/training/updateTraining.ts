@@ -10,13 +10,13 @@ export class UpdateTrainingUseCase{
         if (!data.id) throw new ServerError("Id inválido")
 
         const parsedData = trainingSchema.partial().safeParse(data.dataTrainingDTO)
-        if (!parsedData) throw new ServerError("Informações inválidas")
+        if (!parsedData.success) throw new ServerError("Informações inválidas")
 
         const existingTraining = await this.trainingRepository.findById(data.id)
         if (!existingTraining) throw new ServerError("Treino não existe", 404)
         
         const updatedTraining = { ...existingTraining }
-        Object.assign(updatedTraining, data.dataTrainingDTO)
+        Object.assign(updatedTraining, parsedData.data)
         await this.trainingRepository.update(updatedTraining)
 
         return {...updatedTraining}

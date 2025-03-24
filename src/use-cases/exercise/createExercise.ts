@@ -26,10 +26,8 @@ export class CreateExerciseUseCase {
         await this.exerciseRepository.create(exercise)
 
         trainingExist.exercises = trainingExist.exercises ? [...trainingExist.exercises, exercise] : [exercise]
-        const updateTraining = await this.trainingRepository.update(trainingExist)
+        await this.trainingRepository.update(trainingExist)
 
-        console.log("Treino atualizado:", trainingExist)
-        console.log("Atualização do treino:", updateTraining)
         return {...exercise}
     }
 }

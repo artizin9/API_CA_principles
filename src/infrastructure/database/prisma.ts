@@ -71,7 +71,11 @@ export class PrismaTrainingRepository implements ITrainingRepository{
 
     async findById(id: string): Promise<Training | null> {
         const training = await prisma.training.findUnique({
-            where: { id }
+            where: { id },
+            include: {
+                exercises: true,
+                users: true,
+            }
         })
         return training
     }
